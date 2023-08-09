@@ -1,0 +1,72 @@
+body {
+    font-family: 'San Francisco', sans-serif;
+    background-color: #fdf6e3; /* Soft pastel color */
+    color: #5e5046; /* Autumnal brown */
+}
+
+.navbar {
+    display: flex;
+    justify-content: space-around;
+    background-color: #feebc8; /* Soft peach color */
+    padding: 10px 0;
+}
+
+.navbar button {
+    flex: 1;
+    padding: 10px 0;
+    border: none;
+    background-color: transparent;
+    font-size: 1em;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    font-family: 'San Francisco', sans-serif;
+}
+
+.navbar button:hover {
+    background-color: #fcd7ad; /* Slightly darker peach on hover */
+}
+
+.tab-content {
+    padding: 20px;
+    max-width: 800px;
+    margin: 20px auto;
+    background-color: #fffaf0; /* Very soft cream background for contrast */
+    border-radius: 8px;
+    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+h1, p {
+    margin: 0 0 20px 0;
+}
+
+input[type="text"] {
+    width: 100%;
+    padding: 12px 20px;
+    margin: 8px 0;
+    display: inline-block;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+datalist {
+    font-family: 'San Francisco', sans-serif;
+}
+
+.dietary-options {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 10px;
+}
+
+.dietary-options label {
+    margin-right: 10px;
+}
+
+input[type="radio"] {
+    margin-right: 5px;
+}
+
+.family-member-rsvp {
+    margin-top: 10px;
+}

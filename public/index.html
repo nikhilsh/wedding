@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles.css">
+    <title>Wedding RSVP</title>
+</head>
+<body>
+    <div class="navbar">
+        <button onclick="showTab('home')">Home</button>
+        <button onclick="showTab('details')">Details</button>
+        <button onclick="showTab('rsvp')">RSVP</button>
+        <button onclick="showTab('gallery')">Gallery</button>
+    </div>
+
+    <div id="home" class="tab-content">
+        <h1>Welcome to our wedding website!</h1>
+        <p>Here, you'll find all the necessary information regarding our special day.</p>
+    </div>
+
+    <div id="details" class="tab-content" style="display: none;">
+        <h1>Wedding Details</h1>
+        <p>Details about the wedding will be updated here.</p>
+    </div>
+
+    <div id="rsvp" class="tab-content" style="display: none;">
+        <h1>RSVP</h1>
+        <input type="text" id="guestSearch" list="dropdown" placeholder="Enter a family member's name...">
+        <datalist id="dropdown"></datalist>
+        <div id="familyRSVP" style="display: none;"></div>
+        <button onclick="submitRSVP()">Submit</button>
+    </div>
+
+    <div id="gallery" class="tab-content" style="display: none;">
+        <h1>Gallery</h1>
+        <p>Photos related to the wedding will be posted here.</p>
+    </div>
+
+    <script src="scripts.js"></script>
+</body>
+</html>
