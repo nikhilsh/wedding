@@ -1,52 +1,62 @@
-const families = {
-    "Doe Family": {
-        members: ["John Doe", "Jane Doe", "Sam Doe"],
-        hasResponded: false,
-        attendingMembers: [],
-        dietaryPreferences: {}
-    },
-    // ... add more families as needed
+let guests = {};
+let allMembers = [];
+
+let families = [];
+
+window.onload = function() {
+    fetch('/guests')
+    .then(response => response.json())
+    .then(data => {
+        families = data.families;
+        allMembers = [].concat(...families.map(family => family.members));
+        initSearch();
+        console.log(allMembers)
+    });
 };
 
-const allMembers = [].concat(...Object.values(families).map(family => family.members));
-
-document.getElementById('guestSearch').addEventListener('input', function() {
-    const searchTerm = this.value.toLowerCase();
-    const dropdown = document.getElementById('dropdown');
-
-    // Clear previous options
-    dropdown.innerHTML = '';
-
-    const filteredMembers = allMembers.filter(member => member.toLowerCase().includes(searchTerm));
-
-    filteredMembers.forEach(member => {
-        const option = document.createElement('option');
-        option.value = member;
-        dropdown.appendChild(option);
+function initSearch() {
+    document.getElementById('guestSearch').addEventListener('input', function() {
+        const searchTerm = this.value.toLowerCase();
+        const dropdown = document.getElementById('dropdown');
+        dropdown.innerHTML = ''; 
+        const filteredMembers = allMembers.filter(member => member.toLowerCase().includes(searchTerm));
+        filteredMembers.forEach(member => {
+            const option = document.createElement('option');
+            option.value = member;
+            dropdown.appendChild(option);
+        });
     });
-});
 
-document.getElementById('guestSearch').addEventListener('change', function() {
-    const family = findFamilyByMember(this.value);
-    if (family) {
-        document.getElementById('familyRSVP').style.display = 'block';
-        updateFamilyMembersRSVP(family);
-    } else {
-        document.getElementById('familyRSVP').style.display = 'none';
-    }
-});
-
-function findFamilyByMember(memberName) {
-    return Object.values(families).find(family => family.members.includes(memberName));
+    document.getElementById('guestSearch').addEventListener('change', function() {
+        const selectedMember = this.value;
+        const family = families.find(fam => fam.members.includes(selectedMember));
+    
+        if (family) {
+            document.getElementById('familyRSVP').style.display = 'block';
+            updateFamilyMembersRSVP(family);
+        } else {
+            document.getElementById('familyRSVP').style.display = 'none';
+        }
+    });
 }
 
 function updateFamilyMembersRSVP(family) {
     const familyDiv = document.getElementById('familyRSVP');
-    familyDiv.innerHTML = ''; // Reset
+    familyDiv.innerHTML = ''; 
 
     family.members.forEach(member => {
         const div = document.createElement('div');
         div.className = 'family-member-rsvp';
+
+        const attendingDiv = document.createElement('div');
+        const attendingLabel = document.createElement('label');
+        attendingLabel.textContent = "Attending?";
+        const attendingCheckbox = document.createElement('input');
+        attendingCheckbox.type = 'checkbox';
+        attendingCheckbox.id = `${member}-attending`;
+        attendingLabel.appendChild(attendingCheckbox);
+        attendingDiv.appendChild(attendingLabel);
+        div.appendChild(attendingDiv);
 
         const nameLabel = document.createElement('label');
         nameLabel.textContent = member;
@@ -79,13 +89,21 @@ function updateFamilyMembersRSVP(family) {
 function gatherRSVPData() {
     const rsvpData = {};
 
-    Object.values(families).forEach(family => {
-        family.members.forEach(member => {
+    const displayedGuest = document.getElementById('guestSearch').value;
+    const family = families.find(fam => fam.members.includes(displayedGuest));
+    const members = family ? family.members : [];
+
+    members.forEach(member => {
+
+        const checkbox = document.getElementById(`${member}-attending`);
+        if (checkbox) {
+            const isAttending = checkbox.checked;
+
             const radios = document.querySelectorAll(`input[name="${member}-diet"]:checked`);
             if (radios.length > 0) {
                 const dietaryPreference = radios[0].value;
                 rsvpData[member] = {
-                    isAttending: true,
+                    isAttending: isAttending,
                     dietaryPreference: dietaryPreference
                 };
             } else {
@@ -94,7 +112,7 @@ function gatherRSVPData() {
                     dietaryPreference: "None"
                 };
             }
-        });
+        }
     });
 
     return rsvpData;
@@ -102,7 +120,18 @@ function gatherRSVPData() {
 
 function submitRSVP() {
     const rsvpData = gatherRSVPData();
-    alert(JSON.stringify(rsvpData, null, 4));
+    fetch('/rsvp', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(rsvpData)
+    })
+
+    .then(response => response.json())
+    .then(data => {
+        alert(data.message);
+    });
 }
 
 function showTab(tabName) {
@@ -115,5 +144,4 @@ function showTab(tabName) {
     tabContent.style.display = 'block';
 }
 
-// Initialize by showing the first tab
 showTab('home');
