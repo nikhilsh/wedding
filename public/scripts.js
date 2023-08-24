@@ -133,15 +133,3 @@ function submitRSVP() {
         alert(data.message);
     });
 }
-
-function showTab(tabName) {
-    const allTabContents = document.querySelectorAll('.tab-content');
-    allTabContents.forEach(content => {
-        content.style.display = 'none';
-    });
-
-    const tabContent = document.getElementById(tabName);
-    tabContent.style.display = 'block';
-}
-
-showTab('home');
