@@ -2,6 +2,7 @@ import express from 'express';
 import bodyParser from 'body-parser';
 import { Low } from 'lowdb'
 import { JSONFile } from 'lowdb/node'
+import fetch from 'node-fetch'
 
 const app = express();
 const PORT = 3000;
@@ -31,28 +32,37 @@ app.use(express.static('public'));
 app.get('/guests', (req, res) => {
     db.read('guests')
     const guests = db.data
-    console.log(guests)
     res.json(guests);
 });
 
+
+
 app.post('/rsvp', (req, res) => {
     const rsvpData = req.body;
-
-    for (let name in rsvpData) {
-        if (db.get('guests').has(name).value()) {
-            const { isAttending, dietaryPreference } = rsvpData[name];
-            console.log(name, isAttending, dietaryPreference);
-
-            db.get('guests')
-              .set(`${name}.hasResponded`, true)
-              .set(`${name}.isAttending`, isAttending)
-              .set(`${name}.dietaryPreference`, dietaryPreference)
-              .write();
-        }
-    }
-
-    res.json({ message: 'RSVP submitted successfully!' });
+    for (let index in rsvpData) {
+      let person = rsvpData[index]
+      let data = {
+        'Name': person['name'],
+        'isAttending': person['isAttending'],
+        'dietaryPreference': person['dietaryPreference'],
+        'hasResponded': true
+      }
+    
+      const action = 'https://script.google.com/macros/s/AKfycbxuuzMLLszKV1Ms3PNc4VZzQMiAivjVLhwl8kj7gwgl2jfQgoKO6BA6iT_KvFmtNUZ8/exec'
+      
+      fetch(action, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: data
+    })
+    .then(response => response.json())
+    .then(response => console.log(JSON.stringify(response)))
+  }
 });
+
+
 
 
 app.listen(PORT, () => {

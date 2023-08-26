@@ -10,7 +10,6 @@ window.onload = function() {
         families = data.families;
         allMembers = [].concat(...families.map(family => family.members));
         initSearch();
-        console.log(allMembers)
     });
 };
 
@@ -87,7 +86,7 @@ function updateFamilyMembersRSVP(family) {
 }
 
 function gatherRSVPData() {
-    const rsvpData = {};
+    const rsvpData = [];
 
     const displayedGuest = document.getElementById('guestSearch').value;
     const family = families.find(fam => fam.members.includes(displayedGuest));
@@ -102,15 +101,17 @@ function gatherRSVPData() {
             const radios = document.querySelectorAll(`input[name="${member}-diet"]:checked`);
             if (radios.length > 0) {
                 const dietaryPreference = radios[0].value;
-                rsvpData[member] = {
+                rsvpData.push({
+                    name: member,
                     isAttending: isAttending,
                     dietaryPreference: dietaryPreference
-                };
+                })
             } else {
-                rsvpData[member] = {
+                rsvpData.push({
+                    name: member,
                     isAttending: false,
                     dietaryPreference: "None"
-                };
+                })
             }
         }
     });
