@@ -10,6 +10,7 @@ window.onload = function() {
         families = data.families;
         allMembers = [].concat(...families.map(family => family.members));
         initSearch();
+        console.log(allMembers)
     });
 };
 
@@ -22,6 +23,7 @@ function initSearch() {
         filteredMembers.forEach(member => {
             const option = document.createElement('option');
             option.value = member;
+            option.className = 'rsvp-dropdown-option';
             dropdown.appendChild(option);
         });
     });
@@ -47,6 +49,11 @@ function updateFamilyMembersRSVP(family) {
         const div = document.createElement('div');
         div.className = 'family-member-rsvp';
 
+        const nameLabel = document.createElement('label');
+        nameLabel.textContent = member;
+        nameLabel.style = 'width: 100%; text-align:center;'
+        div.appendChild(nameLabel);
+
         const attendingDiv = document.createElement('div');
         const attendingLabel = document.createElement('label');
         attendingLabel.textContent = "Attending?";
@@ -57,13 +64,9 @@ function updateFamilyMembersRSVP(family) {
         attendingDiv.appendChild(attendingLabel);
         div.appendChild(attendingDiv);
 
-        const nameLabel = document.createElement('label');
-        nameLabel.textContent = member;
-        div.appendChild(nameLabel);
-
         const dietaryDiv = document.createElement('div');
         dietaryDiv.className = 'dietary-options';
-        const dietaryOptions = ["veg", "halal", "none"];
+        const dietaryOptions = ["Indian Vegetarian", "halal", "No Restrictions"];
         dietaryOptions.forEach(option => {
             const label = document.createElement('label');
             label.textContent = option.charAt(0).toUpperCase() + option.slice(1);
@@ -86,7 +89,7 @@ function updateFamilyMembersRSVP(family) {
 }
 
 function gatherRSVPData() {
-    const rsvpData = [];
+    const rsvpData = {};
 
     const displayedGuest = document.getElementById('guestSearch').value;
     const family = families.find(fam => fam.members.includes(displayedGuest));
@@ -101,17 +104,17 @@ function gatherRSVPData() {
             const radios = document.querySelectorAll(`input[name="${member}-diet"]:checked`);
             if (radios.length > 0) {
                 const dietaryPreference = radios[0].value;
-                rsvpData.push({
+                rsvpData[member] = {
                     name: member,
                     isAttending: isAttending,
                     dietaryPreference: dietaryPreference
-                })
+                };
             } else {
-                rsvpData.push({
-                    name: member,
+                rsvpData[member] = {
+                    
                     isAttending: false,
                     dietaryPreference: "None"
-                })
+                };
             }
         }
     });
@@ -121,6 +124,7 @@ function gatherRSVPData() {
 
 function submitRSVP() {
     const rsvpData = gatherRSVPData();
+    
     fetch('/rsvp', {
         method: 'POST',
         headers: {

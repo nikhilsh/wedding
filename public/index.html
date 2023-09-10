@@ -309,10 +309,10 @@
 	<div id="fh5co-started" class="fh5co-bg" style="background-image:url(images/img_bg_4.jpg);">
 		<div class="overlay"></div>
 		<div class="container">
-            <div id="rsvp" class="col-md-8 col-md-offset-2">
+            <div id="rsvp" class="col-md-8 col-md-offset-2 family-member-rsvp">
                 <input type="name" class="form-control" id="guestSearch" list="dropdown" placeholder="Name">
                 <datalist id="dropdown"></datalist>
-                <div id="familyRSVP" style="display: none;"></div>
+                <div id="familyRSVP" class="rsvp-blur-image" style="display: none;"></div>
             </div>
             <div class="col-md-4 col-md-offset-4">
                 <button class="btn btn-default btn-block" onclick="submitRSVP()">Submit</button>                
@@ -366,7 +366,7 @@
         day: d.getDate(),
         enableUtc: false
     });
-	</script>
+</script>
 
 	</body>
 </html>

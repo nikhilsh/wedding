@@ -2,7 +2,6 @@ import express from 'express';
 import bodyParser from 'body-parser';
 import { Low } from 'lowdb'
 import { JSONFile } from 'lowdb/node'
-import fetch from 'node-fetch'
 
 const app = express();
 const PORT = 3000;
@@ -23,22 +22,21 @@ const defaultData = {
       }
     ]
   }
-  
-const db = new Low(adapter, defaultData)
+const db = new Low(adapter, { guests: [] })
 
 app.use(bodyParser.json());
 app.use(express.static('public')); 
 
-app.get('/guests', (req, res) => {
-    db.read('guests')
+app.get('/guests', async (req, res) => {
+    await db.read()
     const guests = db.data
     res.json(guests);
 });
 
-
-
-app.post('/rsvp', (req, res) => {
+app.post('/rsvp', async (req, res) => {
     const rsvpData = req.body;
+
+    await db.read()
     for (let index in rsvpData) {
       let person = rsvpData[index]
       let data = {
@@ -47,22 +45,22 @@ app.post('/rsvp', (req, res) => {
         'dietaryPreference': person['dietaryPreference'],
         'hasResponded': true
       }
-    
-      const action = 'https://script.google.com/macros/s/AKfycbxuuzMLLszKV1Ms3PNc4VZzQMiAivjVLhwl8kj7gwgl2jfQgoKO6BA6iT_KvFmtNUZ8/exec'
-      
-      fetch(action, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: data
-    })
-    .then(response => response.json())
-    .then(response => console.log(JSON.stringify(response)))
-  }
+      console.log('data: ' + JSON.stringify(data))
+      const guests = db.data
+      // console.log("rsvp" + guests)
+      // if (guests.includes(name)) {
+      //   const { isAttending, dietaryPreference } = rsvpData[name]
+      //   console.log(name, isAttending, dietaryPreference)
+      //   db.data.guests.push({
+      //     name: rsvpData.name,
+      //     hasResponded: true,
+      //     isAttending: isAttending,
+      //     dietaryPreference: dietaryPreference
+      //   })
+      // }
+    }
+    res.json({ message: 'RSVP submitted successfully!' });
 });
-
-
 
 
 app.listen(PORT, () => {
