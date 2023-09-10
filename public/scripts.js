@@ -4,7 +4,7 @@ let allMembers = [];
 let families = [];
 
 window.onload = function() {
-    fetch('/guests')
+    fetch('/api/guests')
     .then(response => response.json())
     .then(data => {
         families = data.families;
@@ -129,7 +129,7 @@ function gatherRSVPData() {
 function submitRSVP() {
     const rsvpData = gatherRSVPData();
     
-    fetch('/rsvp', {
+    fetch('/api/rsvp', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
