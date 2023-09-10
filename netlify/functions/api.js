@@ -15,7 +15,21 @@ const db = new Low(adapter, { guests: [] })
 
 router.get('/guests', async (req, res) => {
     await db.read()
-    const guests = db.data
+    const guests = {
+        "families": [
+          {
+            "members": ["John Doe", "Jane Doe", "Sam Doe"],
+            "hasResponded": false,
+            "attendingMembers": [],
+            "dietaryPreferences": {
+              "John Doe": "None",
+              "Jane Doe": "Veg",
+              "Sam Doe": "Halal"
+            }
+          }
+        ]
+      }
+      
     res.json(guests);
 });
 
