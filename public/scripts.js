@@ -89,35 +89,39 @@ function updateFamilyMembersRSVP(family) {
 }
 
 function gatherRSVPData() {
-    const rsvpData = {};
 
     const displayedGuest = document.getElementById('guestSearch').value;
     const family = families.find(fam => fam.members.includes(displayedGuest));
     const members = family ? family.members : [];
 
-    members.forEach(member => {
+    let rsvpData = [];
 
+    members.forEach(member => {
         const checkbox = document.getElementById(`${member}-attending`);
         if (checkbox) {
             const isAttending = checkbox.checked;
 
             const radios = document.querySelectorAll(`input[name="${member}-diet"]:checked`);
+            let entry;
             if (radios.length > 0) {
                 const dietaryPreference = radios[0].value;
-                rsvpData[member] = {
+                entry = {
                     name: member,
                     isAttending: isAttending,
                     dietaryPreference: dietaryPreference
                 };
             } else {
-                rsvpData[member] = {
-                    
+                entry = {
+                    name: member,
                     isAttending: false,
                     dietaryPreference: "None"
                 };
             }
+            // Push the entry object to the array
+            rsvpData.push(entry);
         }
     });
+
 
     return rsvpData;
 }
