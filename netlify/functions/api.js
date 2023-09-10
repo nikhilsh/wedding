@@ -3,7 +3,6 @@ import express, { Router } from 'express';
 import serverless from 'serverless-http';
 import { Low } from 'lowdb'
 import { JSONFile } from 'lowdb/node'
-import fetch from 'node-fetch'
 
 const api = express();
 
