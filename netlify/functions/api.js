@@ -1,7 +1,6 @@
 
 import express, { Router } from 'express';
 import serverless from 'serverless-http';
-import bodyParser from 'body-parser';
 import { Low } from 'lowdb'
 import { JSONFile } from 'lowdb/node'
 import fetch from 'node-fetch'
@@ -54,6 +53,8 @@ router.post('/rsvp', (req, res) => {
         },
         body: JSON.stringify(data)
     })
+    .then(() => console.log("Form successfully submitted"))
+    .catch((error) => alert(error));
     }
     res.json({ message: 'RSVP submitted successfully!' });
 });
