@@ -35,7 +35,8 @@ router.get('/guests', async (req, res) => {
 
 router.post('/rsvp', (req, res) => {
     const rsvpData = req.body;
-    const action = process.env.ACTION_URL
+    // const action = process.env.ACTION_URL
+    const action = 'https://script.google.com/macros/s/AKfycbw1pCYL0phuRs0Qz4XawnDLdB5Boztr1hAV2qmQTapJ1Vp68tE6q6PvM6mPhWapOv0r/exec'
     for (let index in rsvpData) {
       let person = rsvpData[index]
       let data = {
@@ -45,7 +46,6 @@ router.post('/rsvp', (req, res) => {
         'hasResponded': true
       }
       console.log('data: ' + JSON.stringify(data))
-
 
       fetch(action, {
         method: 'POST',
