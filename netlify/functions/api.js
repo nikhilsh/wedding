@@ -5,7 +5,7 @@ import { Low } from 'lowdb'
 import { JSONFile } from 'lowdb/node'
 
 const api = express();
-
+api.use(express.json());
 const router = Router();
 const file = './db.json'
 const adapter = new JSONFile(file)
@@ -36,8 +36,6 @@ router.post('/rsvp', (req, res) => {
     // const action = process.env.ACTION_URL
     const action = 'https://script.google.com/macros/s/AKfycbyZeXKllD3bJQmoygRT9Qz8gy_Xr8P1jMkpSnH1hnekDR7iPtG0DWFnI6TIXdknJaWO/exec'
     for (let index in rsvpData) {
-        console.log(JSON.stringify(rsvpData))
-
       let person = rsvpData[index]
       let data = {
         'Name': person['name'],
